@@ -182,7 +182,7 @@ IPFS.prototype.sendAsync = function sendAsync(opts, cb) {
     request.open('POST', '' + self.requestBase + opts.uri + pinningURI);
   } else {
       if (opts.uri === '/cat?arg=') {
-        requests.open('POST', '' + self.requestBase + opts.uri + pinningURI);
+        request.open('POST', '' + self.requestBase + opts.uri + pinningURI);
       } else { request.open('GET', '' + self.requestBase + opts.uri + pinningURI);
   }}
 
