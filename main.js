@@ -181,7 +181,7 @@ IPFS.prototype.sendAsync = function sendAsync(opts, cb) {
   if (options.payload) {
     request.open('POST', '' + self.requestBase + opts.uri + pinningURI);
   } else {
-      if (opts.uri === '/cat?arg=') {
+      if (opts.uri.includes('/cat?arg=')) {
         request.open('POST', '' + self.requestBase + opts.uri + pinningURI);
       } else { request.open('GET', '' + self.requestBase + opts.uri + pinningURI);
   }}
