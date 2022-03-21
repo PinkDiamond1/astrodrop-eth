@@ -1061,10 +1061,10 @@ Stoplight.prototype.await = function(fn){
  */
 
 const waterfall = __webpack_require__(/*! async/waterfall */ "l1gh")
-const parallel = __webpack_require__(/*! async/parallel */ "KWkM")
+const parallel = __webpack_require__(/*! async/parallel */ "GAFv")
 const inherits = __webpack_require__(/*! util */ "MCLT").inherits
-const ethUtil = __webpack_require__(/*! ethereumjs-util */ "uXik")
-const sigUtil = __webpack_require__(/*! eth-sig-util */ "97sR")
+const ethUtil = __webpack_require__(/*! ethereumjs-util */ "/JJz")
+const sigUtil = __webpack_require__(/*! eth-sig-util */ "ZTz7")
 const extend = __webpack_require__(/*! xtend */ "U6jy")
 const Semaphore = __webpack_require__(/*! semaphore */ "odnP")
 const Subprovider = __webpack_require__(/*! ./subprovider.js */ "2WD0")
@@ -3307,7 +3307,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const EventEmitter = __webpack_require__(/*! events */ "+qE3").EventEmitter
 const inherits = __webpack_require__(/*! util */ "MCLT").inherits
-const ethUtil = __webpack_require__(/*! ethereumjs-util */ "uXik")
+const ethUtil = __webpack_require__(/*! ethereumjs-util */ "/JJz")
 const EthBlockTracker = __webpack_require__(/*! eth-block-tracker */ "V5x4")
 const map = __webpack_require__(/*! async/map */ "LCem")
 const eachSeries = __webpack_require__(/*! async/eachSeries */ "YOJA")
@@ -10803,8 +10803,8 @@ exports.getLocalStorage = getLocalStorage;
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {const inherits = __webpack_require__(/*! util */ "MCLT").inherits
-const Transaction = __webpack_require__(/*! ethereumjs-tx */ "MV7B")
-const ethUtil = __webpack_require__(/*! ethereumjs-util */ "uXik")
+const Transaction = __webpack_require__(/*! ethereumjs-tx */ "SwSE")
+const ethUtil = __webpack_require__(/*! ethereumjs-util */ "/JJz")
 const Subprovider = __webpack_require__(/*! ./subprovider.js */ "2WD0")
 const blockTagForPayload = __webpack_require__(/*! ../util/rpc-cache-utils */ "GIIu").blockTagForPayload
 
@@ -12434,7 +12434,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "convertNumberToArrayBuffer", function() { return convertNumberToArrayBuffer; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "convertNumberToUtf8", function() { return convertNumberToUtf8; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "convertNumberToHex", function() { return convertNumberToHex; });
-/* harmony import */ var bn_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bn.js */ "0RTg");
+/* harmony import */ var bn_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bn.js */ "9gnv");
 /* harmony import */ var bn_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(bn_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _walletconnect_encoding__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @walletconnect/encoding */ "MgLx");
 /* harmony import */ var _walletconnect_encoding__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_walletconnect_encoding__WEBPACK_IMPORTED_MODULE_1__);

@@ -255,59 +255,6 @@ module.exports = exports['default'];
 
 /***/ }),
 
-/***/ "6oS5":
-/*!*************************************************!*\
-  !*** ./node_modules/async/internal/parallel.js ***!
-  \*************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.default = _parallel;
-
-var _noop = __webpack_require__(/*! lodash/noop */ "vN+2");
-
-var _noop2 = _interopRequireDefault(_noop);
-
-var _isArrayLike = __webpack_require__(/*! lodash/isArrayLike */ "MMmD");
-
-var _isArrayLike2 = _interopRequireDefault(_isArrayLike);
-
-var _slice = __webpack_require__(/*! ./slice */ "3qT5");
-
-var _slice2 = _interopRequireDefault(_slice);
-
-var _wrapAsync = __webpack_require__(/*! ./wrapAsync */ "aR5N");
-
-var _wrapAsync2 = _interopRequireDefault(_wrapAsync);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _parallel(eachfn, tasks, callback) {
-    callback = callback || _noop2.default;
-    var results = (0, _isArrayLike2.default)(tasks) ? [] : {};
-
-    eachfn(tasks, function (task, key, callback) {
-        (0, _wrapAsync2.default)(task)(function (err, result) {
-            if (arguments.length > 2) {
-                result = (0, _slice2.default)(arguments, 1);
-            }
-            results[key] = result;
-            callback(err);
-        });
-    }, function (err) {
-        callback(err, results);
-    });
-}
-module.exports = exports['default'];
-
-/***/ }),
-
 /***/ "6sVZ":
 /*!*********************************************!*\
   !*** ./node_modules/lodash/_isPrototype.js ***!
@@ -381,135 +328,6 @@ function keys(object) {
 }
 
 module.exports = keys;
-
-
-/***/ }),
-
-/***/ "97sR":
-/*!**************************************************************************************!*\
-  !*** ./node_modules/@walletconnect/web3-provider/node_modules/eth-sig-util/index.js ***!
-  \**************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-const ethUtil = __webpack_require__(/*! ethereumjs-util */ "uXik")
-const ethAbi = __webpack_require__(/*! ethereumjs-abi */ "1shM")
-
-module.exports = {
-
-  concatSig: function (v, r, s) {
-    const rSig = ethUtil.fromSigned(r)
-    const sSig = ethUtil.fromSigned(s)
-    const vSig = ethUtil.bufferToInt(v)
-    const rStr = padWithZeroes(ethUtil.toUnsigned(rSig).toString('hex'), 64)
-    const sStr = padWithZeroes(ethUtil.toUnsigned(sSig).toString('hex'), 64)
-    const vStr = ethUtil.stripHexPrefix(ethUtil.intToHex(vSig))
-    return ethUtil.addHexPrefix(rStr.concat(sStr, vStr)).toString('hex')
-  },
-
-  normalize: function (input) {
-    if (!input) return
-
-    if (typeof input === 'number') {
-      const buffer = ethUtil.toBuffer(input)
-      input = ethUtil.bufferToHex(buffer)
-    }
-
-    if (typeof input !== 'string') {
-      var msg = 'eth-sig-util.normalize() requires hex string or integer input.'
-      msg += ' received ' + (typeof input) + ': ' + input
-      throw new Error(msg)
-    }
-
-    return ethUtil.addHexPrefix(input.toLowerCase())
-  },
-
-  personalSign: function (privateKey, msgParams) {
-    var message = ethUtil.toBuffer(msgParams.data)
-    var msgHash = ethUtil.hashPersonalMessage(message)
-    var sig = ethUtil.ecsign(msgHash, privateKey)
-    var serialized = ethUtil.bufferToHex(this.concatSig(sig.v, sig.r, sig.s))
-    return serialized
-  },
-
-  recoverPersonalSignature: function (msgParams) {
-    const publicKey = getPublicKeyFor(msgParams)
-    const sender = ethUtil.publicToAddress(publicKey)
-    const senderHex = ethUtil.bufferToHex(sender)
-    return senderHex
-  },
-
-  extractPublicKey: function (msgParams) {
-    const publicKey = getPublicKeyFor(msgParams)
-    return '0x' + publicKey.toString('hex')
-  },
-
-  typedSignatureHash: function (typedData) {
-    const hashBuffer = typedSignatureHash(typedData)
-    return ethUtil.bufferToHex(hashBuffer)
-  },
-
-  signTypedData: function (privateKey, msgParams) {
-    const msgHash = typedSignatureHash(msgParams.data)
-    const sig = ethUtil.ecsign(msgHash, privateKey)
-    return ethUtil.bufferToHex(this.concatSig(sig.v, sig.r, sig.s))
-  },
-
-  recoverTypedSignature: function (msgParams) {
-    const msgHash = typedSignatureHash(msgParams.data)
-    const publicKey = recoverPublicKey(msgHash, msgParams.sig)
-    const sender = ethUtil.publicToAddress(publicKey)
-    return ethUtil.bufferToHex(sender)
-  }
-
-}
-
-/**
- * @param typedData - Array of data along with types, as per EIP712.
- * @returns Buffer
- */
-function typedSignatureHash(typedData) {
-  const error = new Error('Expect argument to be non-empty array')
-  if (typeof typedData !== 'object' || !typedData.length) throw error
-
-  const data = typedData.map(function (e) {
-    return e.type === 'bytes' ? ethUtil.toBuffer(e.value) : e.value
-  })
-  const types = typedData.map(function (e) { return e.type })
-  const schema = typedData.map(function (e) {
-    if (!e.name) throw error
-    return e.type + ' ' + e.name
-  })
-
-  return ethAbi.soliditySHA3(
-    ['bytes32', 'bytes32'],
-    [
-      ethAbi.soliditySHA3(new Array(typedData.length).fill('string'), schema),
-      ethAbi.soliditySHA3(types, data)
-    ]
-  )
-}
-
-function recoverPublicKey(hash, sig) {
-  const signature = ethUtil.toBuffer(sig)
-  const sigParams = ethUtil.fromRpcSig(signature)
-  return ethUtil.ecrecover(hash, sigParams.v, sigParams.r, sigParams.s)
-}
-
-function getPublicKeyFor (msgParams) {
-  const message = ethUtil.toBuffer(msgParams.data)
-  const msgHash = ethUtil.hashPersonalMessage(message)
-  return recoverPublicKey(msgHash, msgParams.sig)
-}
-
-
-function padWithZeroes (number, length) {
-  var myString = '' + number
-  while (myString.length < length) {
-    myString = '0' + myString
-  }
-  return myString
-}
 
 
 /***/ }),
@@ -846,81 +664,10 @@ module.exports = isObjectLike;
 
 /***/ }),
 
-/***/ "GoyQ":
-/*!*****************************************!*\
-  !*** ./node_modules/lodash/isObject.js ***!
-  \*****************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/**
- * Checks if `value` is the
- * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
- * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
- *
- * @static
- * @memberOf _
- * @since 0.1.0
- * @category Lang
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an object, else `false`.
- * @example
- *
- * _.isObject({});
- * // => true
- *
- * _.isObject([1, 2, 3]);
- * // => true
- *
- * _.isObject(_.noop);
- * // => true
- *
- * _.isObject(null);
- * // => false
- */
-function isObject(value) {
-  var type = typeof value;
-  return value != null && (type == 'object' || type == 'function');
-}
-
-module.exports = isObject;
-
-
-/***/ }),
-
-/***/ "JTzB":
-/*!*************************************************!*\
-  !*** ./node_modules/lodash/_baseIsArguments.js ***!
-  \*************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ "NykK"),
-    isObjectLike = __webpack_require__(/*! ./isObjectLike */ "ExA7");
-
-/** `Object#toString` result references. */
-var argsTag = '[object Arguments]';
-
-/**
- * The base implementation of `_.isArguments`.
- *
- * @private
- * @param {*} value The value to check.
- * @returns {boolean} Returns `true` if `value` is an `arguments` object,
- */
-function baseIsArguments(value) {
-  return isObjectLike(value) && baseGetTag(value) == argsTag;
-}
-
-module.exports = baseIsArguments;
-
-
-/***/ }),
-
-/***/ "KWkM":
-/*!****************************************!*\
-  !*** ./node_modules/async/parallel.js ***!
-  \****************************************/
+/***/ "GAFv":
+/*!*************************************************************************************************!*\
+  !*** ./node_modules/authereum/node_modules/web3-provider-engine/node_modules/async/parallel.js ***!
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -936,7 +683,7 @@ var _eachOf = __webpack_require__(/*! ./eachOf */ "abV/");
 
 var _eachOf2 = _interopRequireDefault(_eachOf);
 
-var _parallel = __webpack_require__(/*! ./internal/parallel */ "6oS5");
+var _parallel = __webpack_require__(/*! ./internal/parallel */ "jyG0");
 
 var _parallel2 = _interopRequireDefault(_parallel);
 
@@ -1015,6 +762,77 @@ function parallelLimit(tasks, callback) {
   (0, _parallel2.default)(_eachOf2.default, tasks, callback);
 }
 module.exports = exports['default'];
+
+/***/ }),
+
+/***/ "GoyQ":
+/*!*****************************************!*\
+  !*** ./node_modules/lodash/isObject.js ***!
+  \*****************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/**
+ * Checks if `value` is the
+ * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+ * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+ *
+ * @static
+ * @memberOf _
+ * @since 0.1.0
+ * @category Lang
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+ * @example
+ *
+ * _.isObject({});
+ * // => true
+ *
+ * _.isObject([1, 2, 3]);
+ * // => true
+ *
+ * _.isObject(_.noop);
+ * // => true
+ *
+ * _.isObject(null);
+ * // => false
+ */
+function isObject(value) {
+  var type = typeof value;
+  return value != null && (type == 'object' || type == 'function');
+}
+
+module.exports = isObject;
+
+
+/***/ }),
+
+/***/ "JTzB":
+/*!*************************************************!*\
+  !*** ./node_modules/lodash/_baseIsArguments.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ "NykK"),
+    isObjectLike = __webpack_require__(/*! ./isObjectLike */ "ExA7");
+
+/** `Object#toString` result references. */
+var argsTag = '[object Arguments]';
+
+/**
+ * The base implementation of `_.isArguments`.
+ *
+ * @private
+ * @param {*} value The value to check.
+ * @returns {boolean} Returns `true` if `value` is an `arguments` object,
+ */
+function baseIsArguments(value) {
+  return isObjectLike(value) && baseGetTag(value) == argsTag;
+}
+
+module.exports = baseIsArguments;
+
 
 /***/ }),
 
@@ -1834,6 +1652,135 @@ module.exports = isArray;
 
 /***/ }),
 
+/***/ "ZTz7":
+/*!*******************************************************************!*\
+  !*** ./node_modules/authereum/node_modules/eth-sig-util/index.js ***!
+  \*******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+const ethUtil = __webpack_require__(/*! ethereumjs-util */ "/JJz")
+const ethAbi = __webpack_require__(/*! ethereumjs-abi */ "0gP4")
+
+module.exports = {
+
+  concatSig: function (v, r, s) {
+    const rSig = ethUtil.fromSigned(r)
+    const sSig = ethUtil.fromSigned(s)
+    const vSig = ethUtil.bufferToInt(v)
+    const rStr = padWithZeroes(ethUtil.toUnsigned(rSig).toString('hex'), 64)
+    const sStr = padWithZeroes(ethUtil.toUnsigned(sSig).toString('hex'), 64)
+    const vStr = ethUtil.stripHexPrefix(ethUtil.intToHex(vSig))
+    return ethUtil.addHexPrefix(rStr.concat(sStr, vStr)).toString('hex')
+  },
+
+  normalize: function (input) {
+    if (!input) return
+
+    if (typeof input === 'number') {
+      const buffer = ethUtil.toBuffer(input)
+      input = ethUtil.bufferToHex(buffer)
+    }
+
+    if (typeof input !== 'string') {
+      var msg = 'eth-sig-util.normalize() requires hex string or integer input.'
+      msg += ' received ' + (typeof input) + ': ' + input
+      throw new Error(msg)
+    }
+
+    return ethUtil.addHexPrefix(input.toLowerCase())
+  },
+
+  personalSign: function (privateKey, msgParams) {
+    var message = ethUtil.toBuffer(msgParams.data)
+    var msgHash = ethUtil.hashPersonalMessage(message)
+    var sig = ethUtil.ecsign(msgHash, privateKey)
+    var serialized = ethUtil.bufferToHex(this.concatSig(sig.v, sig.r, sig.s))
+    return serialized
+  },
+
+  recoverPersonalSignature: function (msgParams) {
+    const publicKey = getPublicKeyFor(msgParams)
+    const sender = ethUtil.publicToAddress(publicKey)
+    const senderHex = ethUtil.bufferToHex(sender)
+    return senderHex
+  },
+
+  extractPublicKey: function (msgParams) {
+    const publicKey = getPublicKeyFor(msgParams)
+    return '0x' + publicKey.toString('hex')
+  },
+
+  typedSignatureHash: function (typedData) {
+    const hashBuffer = typedSignatureHash(typedData)
+    return ethUtil.bufferToHex(hashBuffer)
+  },
+
+  signTypedData: function (privateKey, msgParams) {
+    const msgHash = typedSignatureHash(msgParams.data)
+    const sig = ethUtil.ecsign(msgHash, privateKey)
+    return ethUtil.bufferToHex(this.concatSig(sig.v, sig.r, sig.s))
+  },
+
+  recoverTypedSignature: function (msgParams) {
+    const msgHash = typedSignatureHash(msgParams.data)
+    const publicKey = recoverPublicKey(msgHash, msgParams.sig)
+    const sender = ethUtil.publicToAddress(publicKey)
+    return ethUtil.bufferToHex(sender)
+  }
+
+}
+
+/**
+ * @param typedData - Array of data along with types, as per EIP712.
+ * @returns Buffer
+ */
+function typedSignatureHash(typedData) {
+  const error = new Error('Expect argument to be non-empty array')
+  if (typeof typedData !== 'object' || !typedData.length) throw error
+
+  const data = typedData.map(function (e) {
+    return e.type === 'bytes' ? ethUtil.toBuffer(e.value) : e.value
+  })
+  const types = typedData.map(function (e) { return e.type })
+  const schema = typedData.map(function (e) {
+    if (!e.name) throw error
+    return e.type + ' ' + e.name
+  })
+
+  return ethAbi.soliditySHA3(
+    ['bytes32', 'bytes32'],
+    [
+      ethAbi.soliditySHA3(new Array(typedData.length).fill('string'), schema),
+      ethAbi.soliditySHA3(types, data)
+    ]
+  )
+}
+
+function recoverPublicKey(hash, sig) {
+  const signature = ethUtil.toBuffer(sig)
+  const sigParams = ethUtil.fromRpcSig(signature)
+  return ethUtil.ecrecover(hash, sigParams.v, sigParams.r, sigParams.s)
+}
+
+function getPublicKeyFor (msgParams) {
+  const message = ethUtil.toBuffer(msgParams.data)
+  const msgHash = ethUtil.hashPersonalMessage(message)
+  return recoverPublicKey(msgHash, msgParams.sig)
+}
+
+
+function padWithZeroes (number, length) {
+  var myString = '' + number
+  while (myString.length < length) {
+    myString = '0' + myString
+  }
+  return myString
+}
+
+
+/***/ }),
+
 /***/ "aR5N":
 /*!**************************************************!*\
   !*** ./node_modules/async/internal/wrapAsync.js ***!
@@ -2226,6 +2173,59 @@ function _withoutIndex(iteratee) {
     };
 }
 module.exports = exports["default"];
+
+/***/ }),
+
+/***/ "jyG0":
+/*!**********************************************************************************************************!*\
+  !*** ./node_modules/authereum/node_modules/web3-provider-engine/node_modules/async/internal/parallel.js ***!
+  \**********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = _parallel;
+
+var _noop = __webpack_require__(/*! lodash/noop */ "vN+2");
+
+var _noop2 = _interopRequireDefault(_noop);
+
+var _isArrayLike = __webpack_require__(/*! lodash/isArrayLike */ "MMmD");
+
+var _isArrayLike2 = _interopRequireDefault(_isArrayLike);
+
+var _slice = __webpack_require__(/*! ./slice */ "3qT5");
+
+var _slice2 = _interopRequireDefault(_slice);
+
+var _wrapAsync = __webpack_require__(/*! ./wrapAsync */ "aR5N");
+
+var _wrapAsync2 = _interopRequireDefault(_wrapAsync);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _parallel(eachfn, tasks, callback) {
+    callback = callback || _noop2.default;
+    var results = (0, _isArrayLike2.default)(tasks) ? [] : {};
+
+    eachfn(tasks, function (task, key, callback) {
+        (0, _wrapAsync2.default)(task)(function (err, result) {
+            if (arguments.length > 2) {
+                result = (0, _slice2.default)(arguments, 1);
+            }
+            results[key] = result;
+            callback(err);
+        });
+    }, function (err) {
+        callback(err, results);
+    });
+}
+module.exports = exports['default'];
 
 /***/ }),
 

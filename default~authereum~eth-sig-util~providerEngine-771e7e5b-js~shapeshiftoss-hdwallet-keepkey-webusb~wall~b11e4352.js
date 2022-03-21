@@ -1,656 +1,9 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["default~authereum~eth-sig-util~providerEngine-771e7e5b-js~shapeshiftoss-hdwallet-keepkey-webusb~wall~b11e4352"],{
 
-/***/ "OEHg":
-/*!********************************************************************************************!*\
-  !*** ./node_modules/eth-sig-util/node_modules/ethereumjs-util/dist/secp256k1-lib/index.js ***!
-  \********************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer) {
-
-// This file is imported from secp256k1 v3
-// https://github.com/cryptocoinjs/secp256k1-node/blob/master/LICENSE
-
-var BN = __webpack_require__(/*! bn.js */ "Z7Q3");
-var EC = __webpack_require__(/*! elliptic */ "MzeL").ec;
-
-var ec = new EC('secp256k1');
-var ecparams = ec.curve;
-
-exports.privateKeyExport = function (privateKey, compressed) {
-  var d = new BN(privateKey);
-  if (d.ucmp(ecparams.n) >= 0) {
-    throw new Error('couldn\'t export to DER format');
-  }
-
-  var point = ec.g.mul(d);
-  return toPublicKey(point.getX(), point.getY(), compressed);
-};
-
-exports.privateKeyModInverse = function (privateKey) {
-  var bn = new BN(privateKey);
-  if (bn.ucmp(ecparams.n) >= 0 || bn.isZero()) {
-    throw new Error('private key range is invalid');
-  }
-
-  return bn.invm(ecparams.n).toArrayLike(Buffer, 'be', 32);
-};
-
-exports.signatureImport = function (sigObj) {
-  var r = new BN(sigObj.r);
-  if (r.ucmp(ecparams.n) >= 0) {
-    r = new BN(0);
-  }
-
-  var s = new BN(sigObj.s);
-  if (s.ucmp(ecparams.n) >= 0) {
-    s = new BN(0);
-  }
-
-  return Buffer.concat([r.toArrayLike(Buffer, 'be', 32), s.toArrayLike(Buffer, 'be', 32)]);
-};
-
-exports.ecdhUnsafe = function (publicKey, privateKey, compressed) {
-  var point = ec.keyFromPublic(publicKey);
-
-  var scalar = new BN(privateKey);
-  if (scalar.ucmp(ecparams.n) >= 0 || scalar.isZero()) {
-    throw new Error('scalar was invalid (zero or overflow)');
-  }
-
-  var shared = point.pub.mul(scalar);
-  return toPublicKey(shared.getX(), shared.getY(), compressed);
-};
-
-var toPublicKey = function toPublicKey(x, y, compressed) {
-  var publicKey = void 0;
-
-  if (compressed) {
-    publicKey = Buffer.alloc(33);
-    publicKey[0] = y.isOdd() ? 0x03 : 0x02;
-    x.toArrayLike(Buffer, 'be', 32).copy(publicKey, 1);
-  } else {
-    publicKey = Buffer.alloc(65);
-    publicKey[0] = 0x04;
-    x.toArrayLike(Buffer, 'be', 32).copy(publicKey, 1);
-    y.toArrayLike(Buffer, 'be', 32).copy(publicKey, 33);
-  }
-
-  return publicKey;
-};
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../buffer/index.js */ "tjlA").Buffer))
-
-/***/ }),
-
-/***/ "XngN":
-/*!******************************************************************************************!*\
-  !*** ./node_modules/eth-sig-util/node_modules/ethereumjs-util/dist/secp256k1-lib/der.js ***!
-  \******************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer) {
-
-// This file is imported from secp256k1 v3
-// https://github.com/cryptocoinjs/secp256k1-node/blob/master/LICENSE
-
-var EC_PRIVKEY_EXPORT_DER_COMPRESSED = Buffer.from([
-// begin
-0x30, 0x81, 0xd3, 0x02, 0x01, 0x01, 0x04, 0x20,
-// private key
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-// middle
-0xa0, 0x81, 0x85, 0x30, 0x81, 0x82, 0x02, 0x01, 0x01, 0x30, 0x2c, 0x06, 0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x01, 0x01, 0x02, 0x21, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe, 0xff, 0xff, 0xfc, 0x2f, 0x30, 0x06, 0x04, 0x01, 0x00, 0x04, 0x01, 0x07, 0x04, 0x21, 0x02, 0x79, 0xbe, 0x66, 0x7e, 0xf9, 0xdc, 0xbb, 0xac, 0x55, 0xa0, 0x62, 0x95, 0xce, 0x87, 0x0b, 0x07, 0x02, 0x9b, 0xfc, 0xdb, 0x2d, 0xce, 0x28, 0xd9, 0x59, 0xf2, 0x81, 0x5b, 0x16, 0xf8, 0x17, 0x98, 0x02, 0x21, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe, 0xba, 0xae, 0xdc, 0xe6, 0xaf, 0x48, 0xa0, 0x3b, 0xbf, 0xd2, 0x5e, 0x8c, 0xd0, 0x36, 0x41, 0x41, 0x02, 0x01, 0x01, 0xa1, 0x24, 0x03, 0x22, 0x00,
-// public key
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
-
-var EC_PRIVKEY_EXPORT_DER_UNCOMPRESSED = Buffer.from([
-// begin
-0x30, 0x82, 0x01, 0x13, 0x02, 0x01, 0x01, 0x04, 0x20,
-// private key
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-// middle
-0xa0, 0x81, 0xa5, 0x30, 0x81, 0xa2, 0x02, 0x01, 0x01, 0x30, 0x2c, 0x06, 0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x01, 0x01, 0x02, 0x21, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe, 0xff, 0xff, 0xfc, 0x2f, 0x30, 0x06, 0x04, 0x01, 0x00, 0x04, 0x01, 0x07, 0x04, 0x41, 0x04, 0x79, 0xbe, 0x66, 0x7e, 0xf9, 0xdc, 0xbb, 0xac, 0x55, 0xa0, 0x62, 0x95, 0xce, 0x87, 0x0b, 0x07, 0x02, 0x9b, 0xfc, 0xdb, 0x2d, 0xce, 0x28, 0xd9, 0x59, 0xf2, 0x81, 0x5b, 0x16, 0xf8, 0x17, 0x98, 0x48, 0x3a, 0xda, 0x77, 0x26, 0xa3, 0xc4, 0x65, 0x5d, 0xa4, 0xfb, 0xfc, 0x0e, 0x11, 0x08, 0xa8, 0xfd, 0x17, 0xb4, 0x48, 0xa6, 0x85, 0x54, 0x19, 0x9c, 0x47, 0xd0, 0x8f, 0xfb, 0x10, 0xd4, 0xb8, 0x02, 0x21, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe, 0xba, 0xae, 0xdc, 0xe6, 0xaf, 0x48, 0xa0, 0x3b, 0xbf, 0xd2, 0x5e, 0x8c, 0xd0, 0x36, 0x41, 0x41, 0x02, 0x01, 0x01, 0xa1, 0x44, 0x03, 0x42, 0x00,
-// public key
-0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
-
-exports.privateKeyExport = function (privateKey, publicKey, compressed) {
-  var result = Buffer.from(compressed ? EC_PRIVKEY_EXPORT_DER_COMPRESSED : EC_PRIVKEY_EXPORT_DER_UNCOMPRESSED);
-  privateKey.copy(result, compressed ? 8 : 9);
-  publicKey.copy(result, compressed ? 181 : 214);
-  return result;
-};
-
-exports.privateKeyImport = function (privateKey) {
-  var length = privateKey.length;
-
-  // sequence header
-  var index = 0;
-  if (length < index + 1 || privateKey[index] !== 0x30) return null;
-  index += 1;
-
-  // sequence length constructor
-  if (length < index + 1 || !(privateKey[index] & 0x80)) return null;
-
-  var lenb = privateKey[index] & 0x7f;
-  index += 1;
-  if (lenb < 1 || lenb > 2) return null;
-  if (length < index + lenb) return null;
-
-  // sequence length
-  var len = privateKey[index + lenb - 1] | (lenb > 1 ? privateKey[index + lenb - 2] << 8 : 0);
-  index += lenb;
-  if (length < index + len) return null;
-
-  // sequence element 0: version number (=1)
-  if (length < index + 3 || privateKey[index] !== 0x02 || privateKey[index + 1] !== 0x01 || privateKey[index + 2] !== 0x01) {
-    return null;
-  }
-  index += 3;
-
-  // sequence element 1: octet string, up to 32 bytes
-  if (length < index + 2 || privateKey[index] !== 0x04 || privateKey[index + 1] > 0x20 || length < index + 2 + privateKey[index + 1]) {
-    return null;
-  }
-
-  return privateKey.slice(index + 2, index + 2 + privateKey[index + 1]);
-};
-
-exports.signatureImportLax = function (signature) {
-  var r = Buffer.alloc(32, 0);
-  var s = Buffer.alloc(32, 0);
-
-  var length = signature.length;
-  var index = 0;
-
-  // sequence tag byte
-  if (signature[index++] !== 0x30) {
-    return null;
-  }
-
-  // sequence length byte
-  var lenbyte = signature[index++];
-  if (lenbyte & 0x80) {
-    index += lenbyte - 0x80;
-    if (index > length) {
-      return null;
-    }
-  }
-
-  // sequence tag byte for r
-  if (signature[index++] !== 0x02) {
-    return null;
-  }
-
-  // length for r
-  var rlen = signature[index++];
-  if (rlen & 0x80) {
-    lenbyte = rlen - 0x80;
-    if (index + lenbyte > length) {
-      return null;
-    }
-    for (; lenbyte > 0 && signature[index] === 0x00; index += 1, lenbyte -= 1) {}
-    for (rlen = 0; lenbyte > 0; index += 1, lenbyte -= 1) {
-      rlen = (rlen << 8) + signature[index];
-    }
-  }
-  if (rlen > length - index) {
-    return null;
-  }
-  var rindex = index;
-  index += rlen;
-
-  // sequence tag byte for s
-  if (signature[index++] !== 0x02) {
-    return null;
-  }
-
-  // length for s
-  var slen = signature[index++];
-  if (slen & 0x80) {
-    lenbyte = slen - 0x80;
-    if (index + lenbyte > length) {
-      return null;
-    }
-    for (; lenbyte > 0 && signature[index] === 0x00; index += 1, lenbyte -= 1) {}
-    for (slen = 0; lenbyte > 0; index += 1, lenbyte -= 1) {
-      slen = (slen << 8) + signature[index];
-    }
-  }
-  if (slen > length - index) {
-    return null;
-  }
-  var sindex = index;
-  index += slen;
-
-  // ignore leading zeros in r
-  for (; rlen > 0 && signature[rindex] === 0x00; rlen -= 1, rindex += 1) {}
-  // copy r value
-  if (rlen > 32) {
-    return null;
-  }
-  var rvalue = signature.slice(rindex, rindex + rlen);
-  rvalue.copy(r, 32 - rvalue.length);
-
-  // ignore leading zeros in s
-  for (; slen > 0 && signature[sindex] === 0x00; slen -= 1, sindex += 1) {}
-  // copy s value
-  if (slen > 32) {
-    return null;
-  }
-  var svalue = signature.slice(sindex, sindex + slen);
-  svalue.copy(s, 32 - svalue.length);
-
-  return { r: r, s: s };
-};
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../buffer/index.js */ "tjlA").Buffer))
-
-/***/ }),
-
-/***/ "jZ7q":
-/*!******************************************************************************************!*\
-  !*** ./node_modules/eth-sig-util/node_modules/ethereumjs-util/dist/secp256k1-adapter.js ***!
-  \******************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(Buffer) {
-
-var secp256k1 = __webpack_require__(/*! ethereum-cryptography/secp256k1 */ "IhPl");
-
-var secp256k1v3 = __webpack_require__(/*! ./secp256k1-lib/index */ "OEHg");
-var der = __webpack_require__(/*! ./secp256k1-lib/der */ "XngN");
-
-/**
- * Verify an ECDSA privateKey
- * @method privateKeyVerify
- * @param {Buffer} privateKey
- * @return {boolean}
- */
-var privateKeyVerify = function privateKeyVerify(privateKey) {
-  // secp256k1 v4 version throws when privateKey length is not 32
-  if (privateKey.length !== 32) {
-    return false;
-  }
-
-  return secp256k1.privateKeyVerify(Uint8Array.from(privateKey));
-};
-
-/**
- * Export a privateKey in DER format
- * @method privateKeyExport
- * @param {Buffer} privateKey
- * @param {boolean} compressed
- * @return {boolean}
- */
-var privateKeyExport = function privateKeyExport(privateKey, compressed) {
-  // privateKeyExport method is not part of secp256k1 v4 package
-  // this implementation is based on v3
-  if (privateKey.length !== 32) {
-    throw new RangeError('private key length is invalid');
-  }
-
-  var publicKey = secp256k1v3.privateKeyExport(privateKey, compressed);
-
-  return der.privateKeyExport(privateKey, publicKey, compressed);
-};
-
-/**
- * Import a privateKey in DER format
- * @method privateKeyImport
- * @param {Buffer} privateKey
- * @return {Buffer}
- */
-
-var privateKeyImport = function privateKeyImport(privateKey) {
-  // privateKeyImport method is not part of secp256k1 v4 package
-  // this implementation is based on v3
-  privateKey = der.privateKeyImport(privateKey);
-  if (privateKey !== null && privateKey.length === 32 && privateKeyVerify(privateKey)) {
-    return privateKey;
-  }
-
-  throw new Error("couldn't import from DER format");
-};
-
-/**
- * Negate a privateKey by subtracting it from the order of the curve's base point
- * @method privateKeyNegate
- * @param {Buffer} privateKey
- * @return {Buffer}
- */
-var privateKeyNegate = function privateKeyNegate(privateKey) {
-  return Buffer.from(secp256k1.privateKeyNegate(Uint8Array.from(privateKey)));
-};
-
-/**
- * Compute the inverse of a privateKey (modulo the order of the curve's base point).
- * @method privateKeyModInverse
- * @param {Buffer} privateKey
- * @return {Buffer}
- */
-var privateKeyModInverse = function privateKeyModInverse(privateKey) {
-  if (privateKey.length !== 32) {
-    throw new Error('private key length is invalid');
-  }
-
-  return Buffer.from(secp256k1v3.privateKeyModInverse(Uint8Array.from(privateKey)));
-};
-
-/**
- * Tweak a privateKey by adding tweak to it.
- * @method privateKeyTweakAdd
- * @param {Buffer} privateKey
- * @param {Buffer} tweak
- * @return {Buffer}
- */
-var privateKeyTweakAdd = function privateKeyTweakAdd(privateKey, tweak) {
-  return Buffer.from(secp256k1.privateKeyTweakAdd(Uint8Array.from(privateKey), tweak));
-};
-
-/**
- * Tweak a privateKey by multiplying it by a tweak.
- * @method privateKeyTweakMul
- * @param {Buffer} privateKey
- * @param {Buffer} tweak
- * @return {Buffer}
- */
-var privateKeyTweakMul = function privateKeyTweakMul(privateKey, tweak) {
-  return Buffer.from(secp256k1.privateKeyTweakMul(Uint8Array.from(privateKey), Uint8Array.from(tweak)));
-};
-
-/**
- * Compute the public key for a privateKey.
- * @method publicKeyCreate
- * @param {Buffer} privateKey
- * @param {boolean} compressed
- * @return {Buffer}
- */
-var publicKeyCreate = function publicKeyCreate(privateKey, compressed) {
-  return Buffer.from(secp256k1.publicKeyCreate(Uint8Array.from(privateKey), compressed));
-};
-
-/**
- * Convert a publicKey to compressed or uncompressed form.
- * @method publicKeyConvert
- * @param {Buffer} publicKey
- * @param {boolean} compressed
- * @return {Buffer}
- */
-var publicKeyConvert = function publicKeyConvert(publicKey, compressed) {
-  return Buffer.from(secp256k1.publicKeyConvert(Uint8Array.from(publicKey), compressed));
-};
-
-/**
- * Verify an ECDSA publicKey.
- * @method publicKeyVerify
- * @param {Buffer} publicKey
- * @return {boolean}
- */
-var publicKeyVerify = function publicKeyVerify(publicKey) {
-  // secp256k1 v4 version throws when publicKey length is not 33 or 65
-  if (publicKey.length !== 33 && publicKey.length !== 65) {
-    return false;
-  }
-
-  return secp256k1.publicKeyVerify(Uint8Array.from(publicKey));
-};
-
-/**
- * Tweak a publicKey by adding tweak times the generator to it.
- * @method publicKeyTweakAdd
- * @param {Buffer} publicKey
- * @param {Buffer} tweak
- * @param {boolean} compressed
- * @return {Buffer}
- */
-var publicKeyTweakAdd = function publicKeyTweakAdd(publicKey, tweak, compressed) {
-  return Buffer.from(secp256k1.publicKeyTweakAdd(Uint8Array.from(publicKey), Uint8Array.from(tweak), compressed));
-};
-
-/**
- * Tweak a publicKey by multiplying it by a tweak value
- * @method publicKeyTweakMul
- * @param {Buffer} publicKey
- * @param {Buffer} tweak
- * @param {boolean} compressed
- * @return {Buffer}
- */
-var publicKeyTweakMul = function publicKeyTweakMul(publicKey, tweak, compressed) {
-  return Buffer.from(secp256k1.publicKeyTweakMul(Uint8Array.from(publicKey), Uint8Array.from(tweak), compressed));
-};
-
-/**
- * Add a given publicKeys together.
- * @method publicKeyCombine
- * @param {Array<Buffer>} publicKeys
- * @param {boolean} compressed
- * @return {Buffer}
- */
-var publicKeyCombine = function publicKeyCombine(publicKeys, compressed) {
-  var keys = [];
-  publicKeys.forEach(function (publicKey) {
-    keys.push(Uint8Array.from(publicKey));
-  });
-
-  return Buffer.from(secp256k1.publicKeyCombine(keys, compressed));
-};
-
-/**
- * Convert a signature to a normalized lower-S form.
- * @method signatureNormalize
- * @param {Buffer} signature
- * @return {Buffer}
- */
-var signatureNormalize = function signatureNormalize(signature) {
-  return Buffer.from(secp256k1.signatureNormalize(Uint8Array.from(signature)));
-};
-
-/**
- * Serialize an ECDSA signature in DER format.
- * @method signatureExport
- * @param {Buffer} signature
- * @return {Buffer}
- */
-var signatureExport = function signatureExport(signature) {
-  return Buffer.from(secp256k1.signatureExport(Uint8Array.from(signature)));
-};
-
-/**
- * Parse a DER ECDSA signature (follow by [BIP66](https://github.com/bitcoin/bips/blob/master/bip-0066.mediawiki)).
- * @method signatureImport
- * @param {Buffer} signature
- * @return {Buffer}
- */
-var signatureImport = function signatureImport(signature) {
-  return Buffer.from(secp256k1.signatureImport(Uint8Array.from(signature)));
-};
-
-/**
- * Parse a DER ECDSA signature (not follow by [BIP66](https://github.com/bitcoin/bips/blob/master/bip-0066.mediawiki)).
- * @method signatureImportLax
- * @param {Buffer} signature
- * @return {Buffer}
- */
-var signatureImportLax = function signatureImportLax(signature) {
-  // signatureImportLax method is not part of secp256k1 v4 package
-  // this implementation is based on v3
-  // ensure that signature is greater than 0
-  if (signature.length === 0) {
-    throw new RangeError('signature length is invalid');
-  }
-
-  var sigObj = der.signatureImportLax(signature);
-  if (sigObj === null) {
-    throw new Error("couldn't parse DER signature");
-  }
-
-  return secp256k1v3.signatureImport(sigObj);
-};
-
-/**
- * Create an ECDSA signature. Always return low-S signature.
- * @method sign
- * @param {Buffer} message
- * @param {Buffer} privateKey
- * @param {Object} options
- * @return {Buffer}
- */
-var sign = function sign(message, privateKey, options) {
-  if (options === null) {
-    throw new TypeError('options should be an Object');
-  }
-
-  var signOptions = void 0;
-
-  if (options) {
-    signOptions = {};
-
-    if (options.data === null) {
-      throw new TypeError('options.data should be a Buffer');
-    }
-
-    if (options.data) {
-      // validate option.data length
-      if (options.data.length !== 32) {
-        throw new RangeError('options.data length is invalid');
-      }
-
-      signOptions.data = new Uint8Array(options.data);
-    }
-
-    if (options.noncefn === null) {
-      throw new TypeError('options.noncefn should be a Function');
-    }
-
-    if (options.noncefn) {
-      //  convert option.noncefn function signature
-      signOptions.noncefn = function (message, privateKey, algo, data, attempt) {
-        var bufferAlgo = algo != null ? Buffer.from(algo) : null;
-        var bufferData = data != null ? Buffer.from(data) : null;
-
-        var buffer = Buffer.from('');
-
-        if (options.noncefn) {
-          buffer = options.noncefn(Buffer.from(message), Buffer.from(privateKey), bufferAlgo, bufferData, attempt);
-        }
-
-        return Uint8Array.from(buffer);
-      };
-    }
-  }
-
-  var sig = secp256k1.ecdsaSign(Uint8Array.from(message), Uint8Array.from(privateKey), signOptions);
-
-  return {
-    signature: Buffer.from(sig.signature),
-    recovery: sig.recid
-  };
-};
-
-/**
- * Verify an ECDSA signature.
- * @method verify
- * @param {Buffer} message
- * @param {Buffer} signature
- * @param {Buffer} publicKey
- * @return {boolean}
- */
-var verify = function verify(message, signature, publicKey) {
-  // note: secp256k1 v4 verify method has a different argument order
-  return secp256k1.ecdsaVerify(Uint8Array.from(signature), Uint8Array.from(message), publicKey);
-};
-
-/**
- * Recover an ECDSA public key from a signature.
- * @method recover
- * @param {Buffer} message
- * @param {Buffer} signature
- * @param {Number} recid
- * @param {boolean} compressed
- * @return {Buffer}
- */
-var recover = function recover(message, signature, recid, compressed) {
-  // note: secp256k1 v4 recover method has a different argument order
-  return Buffer.from(secp256k1.ecdsaRecover(Uint8Array.from(signature), recid, Uint8Array.from(message), compressed));
-};
-
-/**
- * Compute an EC Diffie-Hellman secret and applied sha256 to compressed public key.
- * @method ecdh
- * @param {Buffer} publicKey
- * @param {Buffer} privateKey
- * @return {Buffer}
- */
-var ecdh = function ecdh(publicKey, privateKey) {
-  // note: secp256k1 v3 doesn't allow optional parameter
-  return Buffer.from(secp256k1.ecdh(Uint8Array.from(publicKey), Uint8Array.from(privateKey), {}));
-};
-
-/**
- * Compute an EC Diffie-Hellman secret and return public key as result
- * @method ecdhUnsafe
- * @param {Buffer} publicKey
- * @param {Buffer} privateKey
- * @param {boolean} compressed
- * @return {Buffer}
- */
-var ecdhUnsafe = function ecdhUnsafe(publicKey, privateKey, compressed) {
-  // ecdhUnsafe method is not part of secp256k1 v4 package
-  // this implementation is based on v3
-  // ensure valid publicKey length
-  if (publicKey.length !== 33 && publicKey.length !== 65) {
-    throw new RangeError('public key length is invalid');
-  }
-
-  // ensure valid privateKey length
-  if (privateKey.length !== 32) {
-    throw new RangeError('private key length is invalid');
-  }
-
-  return Buffer.from(secp256k1v3.ecdhUnsafe(Uint8Array.from(publicKey), Uint8Array.from(privateKey), compressed));
-};
-
-module.exports = {
-  privateKeyVerify: privateKeyVerify,
-  privateKeyExport: privateKeyExport,
-  privateKeyImport: privateKeyImport,
-  privateKeyNegate: privateKeyNegate,
-  privateKeyModInverse: privateKeyModInverse,
-  privateKeyTweakAdd: privateKeyTweakAdd,
-  privateKeyTweakMul: privateKeyTweakMul,
-
-  publicKeyCreate: publicKeyCreate,
-  publicKeyConvert: publicKeyConvert,
-  publicKeyVerify: publicKeyVerify,
-  publicKeyTweakAdd: publicKeyTweakAdd,
-  publicKeyTweakMul: publicKeyTweakMul,
-  publicKeyCombine: publicKeyCombine,
-
-  signatureNormalize: signatureNormalize,
-  signatureExport: signatureExport,
-  signatureImport: signatureImport,
-  signatureImportLax: signatureImportLax,
-
-  sign: sign,
-  verify: verify,
-  recover: recover,
-
-  ecdh: ecdh,
-  ecdhUnsafe: ecdhUnsafe
-};
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../buffer/index.js */ "tjlA").Buffer))
-
-/***/ }),
-
-/***/ "uXik":
-/*!******************************************************************************!*\
-  !*** ./node_modules/eth-sig-util/node_modules/ethereumjs-util/dist/index.js ***!
-  \******************************************************************************/
+/***/ "/JJz":
+/*!**************************************************************************************!*\
+  !*** ./node_modules/web3-provider-engine/node_modules/ethereumjs-util/dist/index.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -665,10 +18,10 @@ var _require = __webpack_require__(/*! ethereum-cryptography/keccak */ "wzGL"),
     k256 = _require.keccak256,
     keccak512 = _require.keccak512;
 
-var secp256k1 = __webpack_require__(/*! ./secp256k1-adapter */ "jZ7q");
+var secp256k1 = __webpack_require__(/*! ./secp256k1-adapter */ "GwZO");
 var assert = __webpack_require__(/*! assert */ "9lTW");
 var rlp = __webpack_require__(/*! rlp */ "o8pB");
-var BN = __webpack_require__(/*! bn.js */ "Z7Q3");
+var BN = __webpack_require__(/*! bn.js */ "vIY1");
 var createHash = __webpack_require__(/*! create-hash */ "mObS");
 var Buffer = __webpack_require__(/*! safe-buffer */ "hwdV").Buffer;
 Object.assign(exports, __webpack_require__(/*! ethjs-util */ "mhLr"));
@@ -1396,6 +749,653 @@ exports.defineProperties = function (self, fields, data) {
     }
   }
 };
+
+/***/ }),
+
+/***/ "GwZO":
+/*!**************************************************************************************************!*\
+  !*** ./node_modules/web3-provider-engine/node_modules/ethereumjs-util/dist/secp256k1-adapter.js ***!
+  \**************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(Buffer) {
+
+var secp256k1 = __webpack_require__(/*! ethereum-cryptography/secp256k1 */ "IhPl");
+
+var secp256k1v3 = __webpack_require__(/*! ./secp256k1-lib/index */ "H4v2");
+var der = __webpack_require__(/*! ./secp256k1-lib/der */ "aRep");
+
+/**
+ * Verify an ECDSA privateKey
+ * @method privateKeyVerify
+ * @param {Buffer} privateKey
+ * @return {boolean}
+ */
+var privateKeyVerify = function privateKeyVerify(privateKey) {
+  // secp256k1 v4 version throws when privateKey length is not 32
+  if (privateKey.length !== 32) {
+    return false;
+  }
+
+  return secp256k1.privateKeyVerify(Uint8Array.from(privateKey));
+};
+
+/**
+ * Export a privateKey in DER format
+ * @method privateKeyExport
+ * @param {Buffer} privateKey
+ * @param {boolean} compressed
+ * @return {boolean}
+ */
+var privateKeyExport = function privateKeyExport(privateKey, compressed) {
+  // privateKeyExport method is not part of secp256k1 v4 package
+  // this implementation is based on v3
+  if (privateKey.length !== 32) {
+    throw new RangeError('private key length is invalid');
+  }
+
+  var publicKey = secp256k1v3.privateKeyExport(privateKey, compressed);
+
+  return der.privateKeyExport(privateKey, publicKey, compressed);
+};
+
+/**
+ * Import a privateKey in DER format
+ * @method privateKeyImport
+ * @param {Buffer} privateKey
+ * @return {Buffer}
+ */
+
+var privateKeyImport = function privateKeyImport(privateKey) {
+  // privateKeyImport method is not part of secp256k1 v4 package
+  // this implementation is based on v3
+  privateKey = der.privateKeyImport(privateKey);
+  if (privateKey !== null && privateKey.length === 32 && privateKeyVerify(privateKey)) {
+    return privateKey;
+  }
+
+  throw new Error("couldn't import from DER format");
+};
+
+/**
+ * Negate a privateKey by subtracting it from the order of the curve's base point
+ * @method privateKeyNegate
+ * @param {Buffer} privateKey
+ * @return {Buffer}
+ */
+var privateKeyNegate = function privateKeyNegate(privateKey) {
+  return Buffer.from(secp256k1.privateKeyNegate(Uint8Array.from(privateKey)));
+};
+
+/**
+ * Compute the inverse of a privateKey (modulo the order of the curve's base point).
+ * @method privateKeyModInverse
+ * @param {Buffer} privateKey
+ * @return {Buffer}
+ */
+var privateKeyModInverse = function privateKeyModInverse(privateKey) {
+  if (privateKey.length !== 32) {
+    throw new Error('private key length is invalid');
+  }
+
+  return Buffer.from(secp256k1v3.privateKeyModInverse(Uint8Array.from(privateKey)));
+};
+
+/**
+ * Tweak a privateKey by adding tweak to it.
+ * @method privateKeyTweakAdd
+ * @param {Buffer} privateKey
+ * @param {Buffer} tweak
+ * @return {Buffer}
+ */
+var privateKeyTweakAdd = function privateKeyTweakAdd(privateKey, tweak) {
+  return Buffer.from(secp256k1.privateKeyTweakAdd(Uint8Array.from(privateKey), tweak));
+};
+
+/**
+ * Tweak a privateKey by multiplying it by a tweak.
+ * @method privateKeyTweakMul
+ * @param {Buffer} privateKey
+ * @param {Buffer} tweak
+ * @return {Buffer}
+ */
+var privateKeyTweakMul = function privateKeyTweakMul(privateKey, tweak) {
+  return Buffer.from(secp256k1.privateKeyTweakMul(Uint8Array.from(privateKey), Uint8Array.from(tweak)));
+};
+
+/**
+ * Compute the public key for a privateKey.
+ * @method publicKeyCreate
+ * @param {Buffer} privateKey
+ * @param {boolean} compressed
+ * @return {Buffer}
+ */
+var publicKeyCreate = function publicKeyCreate(privateKey, compressed) {
+  return Buffer.from(secp256k1.publicKeyCreate(Uint8Array.from(privateKey), compressed));
+};
+
+/**
+ * Convert a publicKey to compressed or uncompressed form.
+ * @method publicKeyConvert
+ * @param {Buffer} publicKey
+ * @param {boolean} compressed
+ * @return {Buffer}
+ */
+var publicKeyConvert = function publicKeyConvert(publicKey, compressed) {
+  return Buffer.from(secp256k1.publicKeyConvert(Uint8Array.from(publicKey), compressed));
+};
+
+/**
+ * Verify an ECDSA publicKey.
+ * @method publicKeyVerify
+ * @param {Buffer} publicKey
+ * @return {boolean}
+ */
+var publicKeyVerify = function publicKeyVerify(publicKey) {
+  // secp256k1 v4 version throws when publicKey length is not 33 or 65
+  if (publicKey.length !== 33 && publicKey.length !== 65) {
+    return false;
+  }
+
+  return secp256k1.publicKeyVerify(Uint8Array.from(publicKey));
+};
+
+/**
+ * Tweak a publicKey by adding tweak times the generator to it.
+ * @method publicKeyTweakAdd
+ * @param {Buffer} publicKey
+ * @param {Buffer} tweak
+ * @param {boolean} compressed
+ * @return {Buffer}
+ */
+var publicKeyTweakAdd = function publicKeyTweakAdd(publicKey, tweak, compressed) {
+  return Buffer.from(secp256k1.publicKeyTweakAdd(Uint8Array.from(publicKey), Uint8Array.from(tweak), compressed));
+};
+
+/**
+ * Tweak a publicKey by multiplying it by a tweak value
+ * @method publicKeyTweakMul
+ * @param {Buffer} publicKey
+ * @param {Buffer} tweak
+ * @param {boolean} compressed
+ * @return {Buffer}
+ */
+var publicKeyTweakMul = function publicKeyTweakMul(publicKey, tweak, compressed) {
+  return Buffer.from(secp256k1.publicKeyTweakMul(Uint8Array.from(publicKey), Uint8Array.from(tweak), compressed));
+};
+
+/**
+ * Add a given publicKeys together.
+ * @method publicKeyCombine
+ * @param {Array<Buffer>} publicKeys
+ * @param {boolean} compressed
+ * @return {Buffer}
+ */
+var publicKeyCombine = function publicKeyCombine(publicKeys, compressed) {
+  var keys = [];
+  publicKeys.forEach(function (publicKey) {
+    keys.push(Uint8Array.from(publicKey));
+  });
+
+  return Buffer.from(secp256k1.publicKeyCombine(keys, compressed));
+};
+
+/**
+ * Convert a signature to a normalized lower-S form.
+ * @method signatureNormalize
+ * @param {Buffer} signature
+ * @return {Buffer}
+ */
+var signatureNormalize = function signatureNormalize(signature) {
+  return Buffer.from(secp256k1.signatureNormalize(Uint8Array.from(signature)));
+};
+
+/**
+ * Serialize an ECDSA signature in DER format.
+ * @method signatureExport
+ * @param {Buffer} signature
+ * @return {Buffer}
+ */
+var signatureExport = function signatureExport(signature) {
+  return Buffer.from(secp256k1.signatureExport(Uint8Array.from(signature)));
+};
+
+/**
+ * Parse a DER ECDSA signature (follow by [BIP66](https://github.com/bitcoin/bips/blob/master/bip-0066.mediawiki)).
+ * @method signatureImport
+ * @param {Buffer} signature
+ * @return {Buffer}
+ */
+var signatureImport = function signatureImport(signature) {
+  return Buffer.from(secp256k1.signatureImport(Uint8Array.from(signature)));
+};
+
+/**
+ * Parse a DER ECDSA signature (not follow by [BIP66](https://github.com/bitcoin/bips/blob/master/bip-0066.mediawiki)).
+ * @method signatureImportLax
+ * @param {Buffer} signature
+ * @return {Buffer}
+ */
+var signatureImportLax = function signatureImportLax(signature) {
+  // signatureImportLax method is not part of secp256k1 v4 package
+  // this implementation is based on v3
+  // ensure that signature is greater than 0
+  if (signature.length === 0) {
+    throw new RangeError('signature length is invalid');
+  }
+
+  var sigObj = der.signatureImportLax(signature);
+  if (sigObj === null) {
+    throw new Error("couldn't parse DER signature");
+  }
+
+  return secp256k1v3.signatureImport(sigObj);
+};
+
+/**
+ * Create an ECDSA signature. Always return low-S signature.
+ * @method sign
+ * @param {Buffer} message
+ * @param {Buffer} privateKey
+ * @param {Object} options
+ * @return {Buffer}
+ */
+var sign = function sign(message, privateKey, options) {
+  if (options === null) {
+    throw new TypeError('options should be an Object');
+  }
+
+  var signOptions = void 0;
+
+  if (options) {
+    signOptions = {};
+
+    if (options.data === null) {
+      throw new TypeError('options.data should be a Buffer');
+    }
+
+    if (options.data) {
+      // validate option.data length
+      if (options.data.length !== 32) {
+        throw new RangeError('options.data length is invalid');
+      }
+
+      signOptions.data = new Uint8Array(options.data);
+    }
+
+    if (options.noncefn === null) {
+      throw new TypeError('options.noncefn should be a Function');
+    }
+
+    if (options.noncefn) {
+      //  convert option.noncefn function signature
+      signOptions.noncefn = function (message, privateKey, algo, data, attempt) {
+        var bufferAlgo = algo != null ? Buffer.from(algo) : null;
+        var bufferData = data != null ? Buffer.from(data) : null;
+
+        var buffer = Buffer.from('');
+
+        if (options.noncefn) {
+          buffer = options.noncefn(Buffer.from(message), Buffer.from(privateKey), bufferAlgo, bufferData, attempt);
+        }
+
+        return Uint8Array.from(buffer);
+      };
+    }
+  }
+
+  var sig = secp256k1.ecdsaSign(Uint8Array.from(message), Uint8Array.from(privateKey), signOptions);
+
+  return {
+    signature: Buffer.from(sig.signature),
+    recovery: sig.recid
+  };
+};
+
+/**
+ * Verify an ECDSA signature.
+ * @method verify
+ * @param {Buffer} message
+ * @param {Buffer} signature
+ * @param {Buffer} publicKey
+ * @return {boolean}
+ */
+var verify = function verify(message, signature, publicKey) {
+  // note: secp256k1 v4 verify method has a different argument order
+  return secp256k1.ecdsaVerify(Uint8Array.from(signature), Uint8Array.from(message), publicKey);
+};
+
+/**
+ * Recover an ECDSA public key from a signature.
+ * @method recover
+ * @param {Buffer} message
+ * @param {Buffer} signature
+ * @param {Number} recid
+ * @param {boolean} compressed
+ * @return {Buffer}
+ */
+var recover = function recover(message, signature, recid, compressed) {
+  // note: secp256k1 v4 recover method has a different argument order
+  return Buffer.from(secp256k1.ecdsaRecover(Uint8Array.from(signature), recid, Uint8Array.from(message), compressed));
+};
+
+/**
+ * Compute an EC Diffie-Hellman secret and applied sha256 to compressed public key.
+ * @method ecdh
+ * @param {Buffer} publicKey
+ * @param {Buffer} privateKey
+ * @return {Buffer}
+ */
+var ecdh = function ecdh(publicKey, privateKey) {
+  // note: secp256k1 v3 doesn't allow optional parameter
+  return Buffer.from(secp256k1.ecdh(Uint8Array.from(publicKey), Uint8Array.from(privateKey), {}));
+};
+
+/**
+ * Compute an EC Diffie-Hellman secret and return public key as result
+ * @method ecdhUnsafe
+ * @param {Buffer} publicKey
+ * @param {Buffer} privateKey
+ * @param {boolean} compressed
+ * @return {Buffer}
+ */
+var ecdhUnsafe = function ecdhUnsafe(publicKey, privateKey, compressed) {
+  // ecdhUnsafe method is not part of secp256k1 v4 package
+  // this implementation is based on v3
+  // ensure valid publicKey length
+  if (publicKey.length !== 33 && publicKey.length !== 65) {
+    throw new RangeError('public key length is invalid');
+  }
+
+  // ensure valid privateKey length
+  if (privateKey.length !== 32) {
+    throw new RangeError('private key length is invalid');
+  }
+
+  return Buffer.from(secp256k1v3.ecdhUnsafe(Uint8Array.from(publicKey), Uint8Array.from(privateKey), compressed));
+};
+
+module.exports = {
+  privateKeyVerify: privateKeyVerify,
+  privateKeyExport: privateKeyExport,
+  privateKeyImport: privateKeyImport,
+  privateKeyNegate: privateKeyNegate,
+  privateKeyModInverse: privateKeyModInverse,
+  privateKeyTweakAdd: privateKeyTweakAdd,
+  privateKeyTweakMul: privateKeyTweakMul,
+
+  publicKeyCreate: publicKeyCreate,
+  publicKeyConvert: publicKeyConvert,
+  publicKeyVerify: publicKeyVerify,
+  publicKeyTweakAdd: publicKeyTweakAdd,
+  publicKeyTweakMul: publicKeyTweakMul,
+  publicKeyCombine: publicKeyCombine,
+
+  signatureNormalize: signatureNormalize,
+  signatureExport: signatureExport,
+  signatureImport: signatureImport,
+  signatureImportLax: signatureImportLax,
+
+  sign: sign,
+  verify: verify,
+  recover: recover,
+
+  ecdh: ecdh,
+  ecdhUnsafe: ecdhUnsafe
+};
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../buffer/index.js */ "tjlA").Buffer))
+
+/***/ }),
+
+/***/ "H4v2":
+/*!****************************************************************************************************!*\
+  !*** ./node_modules/web3-provider-engine/node_modules/ethereumjs-util/dist/secp256k1-lib/index.js ***!
+  \****************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(Buffer) {
+
+// This file is imported from secp256k1 v3
+// https://github.com/cryptocoinjs/secp256k1-node/blob/master/LICENSE
+
+var BN = __webpack_require__(/*! bn.js */ "vIY1");
+var EC = __webpack_require__(/*! elliptic */ "MzeL").ec;
+
+var ec = new EC('secp256k1');
+var ecparams = ec.curve;
+
+exports.privateKeyExport = function (privateKey, compressed) {
+  var d = new BN(privateKey);
+  if (d.ucmp(ecparams.n) >= 0) {
+    throw new Error('couldn\'t export to DER format');
+  }
+
+  var point = ec.g.mul(d);
+  return toPublicKey(point.getX(), point.getY(), compressed);
+};
+
+exports.privateKeyModInverse = function (privateKey) {
+  var bn = new BN(privateKey);
+  if (bn.ucmp(ecparams.n) >= 0 || bn.isZero()) {
+    throw new Error('private key range is invalid');
+  }
+
+  return bn.invm(ecparams.n).toArrayLike(Buffer, 'be', 32);
+};
+
+exports.signatureImport = function (sigObj) {
+  var r = new BN(sigObj.r);
+  if (r.ucmp(ecparams.n) >= 0) {
+    r = new BN(0);
+  }
+
+  var s = new BN(sigObj.s);
+  if (s.ucmp(ecparams.n) >= 0) {
+    s = new BN(0);
+  }
+
+  return Buffer.concat([r.toArrayLike(Buffer, 'be', 32), s.toArrayLike(Buffer, 'be', 32)]);
+};
+
+exports.ecdhUnsafe = function (publicKey, privateKey, compressed) {
+  var point = ec.keyFromPublic(publicKey);
+
+  var scalar = new BN(privateKey);
+  if (scalar.ucmp(ecparams.n) >= 0 || scalar.isZero()) {
+    throw new Error('scalar was invalid (zero or overflow)');
+  }
+
+  var shared = point.pub.mul(scalar);
+  return toPublicKey(shared.getX(), shared.getY(), compressed);
+};
+
+var toPublicKey = function toPublicKey(x, y, compressed) {
+  var publicKey = void 0;
+
+  if (compressed) {
+    publicKey = Buffer.alloc(33);
+    publicKey[0] = y.isOdd() ? 0x03 : 0x02;
+    x.toArrayLike(Buffer, 'be', 32).copy(publicKey, 1);
+  } else {
+    publicKey = Buffer.alloc(65);
+    publicKey[0] = 0x04;
+    x.toArrayLike(Buffer, 'be', 32).copy(publicKey, 1);
+    y.toArrayLike(Buffer, 'be', 32).copy(publicKey, 33);
+  }
+
+  return publicKey;
+};
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../buffer/index.js */ "tjlA").Buffer))
+
+/***/ }),
+
+/***/ "aRep":
+/*!**************************************************************************************************!*\
+  !*** ./node_modules/web3-provider-engine/node_modules/ethereumjs-util/dist/secp256k1-lib/der.js ***!
+  \**************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(Buffer) {
+
+// This file is imported from secp256k1 v3
+// https://github.com/cryptocoinjs/secp256k1-node/blob/master/LICENSE
+
+var EC_PRIVKEY_EXPORT_DER_COMPRESSED = Buffer.from([
+// begin
+0x30, 0x81, 0xd3, 0x02, 0x01, 0x01, 0x04, 0x20,
+// private key
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+// middle
+0xa0, 0x81, 0x85, 0x30, 0x81, 0x82, 0x02, 0x01, 0x01, 0x30, 0x2c, 0x06, 0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x01, 0x01, 0x02, 0x21, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe, 0xff, 0xff, 0xfc, 0x2f, 0x30, 0x06, 0x04, 0x01, 0x00, 0x04, 0x01, 0x07, 0x04, 0x21, 0x02, 0x79, 0xbe, 0x66, 0x7e, 0xf9, 0xdc, 0xbb, 0xac, 0x55, 0xa0, 0x62, 0x95, 0xce, 0x87, 0x0b, 0x07, 0x02, 0x9b, 0xfc, 0xdb, 0x2d, 0xce, 0x28, 0xd9, 0x59, 0xf2, 0x81, 0x5b, 0x16, 0xf8, 0x17, 0x98, 0x02, 0x21, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe, 0xba, 0xae, 0xdc, 0xe6, 0xaf, 0x48, 0xa0, 0x3b, 0xbf, 0xd2, 0x5e, 0x8c, 0xd0, 0x36, 0x41, 0x41, 0x02, 0x01, 0x01, 0xa1, 0x24, 0x03, 0x22, 0x00,
+// public key
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+
+var EC_PRIVKEY_EXPORT_DER_UNCOMPRESSED = Buffer.from([
+// begin
+0x30, 0x82, 0x01, 0x13, 0x02, 0x01, 0x01, 0x04, 0x20,
+// private key
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+// middle
+0xa0, 0x81, 0xa5, 0x30, 0x81, 0xa2, 0x02, 0x01, 0x01, 0x30, 0x2c, 0x06, 0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x01, 0x01, 0x02, 0x21, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe, 0xff, 0xff, 0xfc, 0x2f, 0x30, 0x06, 0x04, 0x01, 0x00, 0x04, 0x01, 0x07, 0x04, 0x41, 0x04, 0x79, 0xbe, 0x66, 0x7e, 0xf9, 0xdc, 0xbb, 0xac, 0x55, 0xa0, 0x62, 0x95, 0xce, 0x87, 0x0b, 0x07, 0x02, 0x9b, 0xfc, 0xdb, 0x2d, 0xce, 0x28, 0xd9, 0x59, 0xf2, 0x81, 0x5b, 0x16, 0xf8, 0x17, 0x98, 0x48, 0x3a, 0xda, 0x77, 0x26, 0xa3, 0xc4, 0x65, 0x5d, 0xa4, 0xfb, 0xfc, 0x0e, 0x11, 0x08, 0xa8, 0xfd, 0x17, 0xb4, 0x48, 0xa6, 0x85, 0x54, 0x19, 0x9c, 0x47, 0xd0, 0x8f, 0xfb, 0x10, 0xd4, 0xb8, 0x02, 0x21, 0x00, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xfe, 0xba, 0xae, 0xdc, 0xe6, 0xaf, 0x48, 0xa0, 0x3b, 0xbf, 0xd2, 0x5e, 0x8c, 0xd0, 0x36, 0x41, 0x41, 0x02, 0x01, 0x01, 0xa1, 0x44, 0x03, 0x42, 0x00,
+// public key
+0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00]);
+
+exports.privateKeyExport = function (privateKey, publicKey, compressed) {
+  var result = Buffer.from(compressed ? EC_PRIVKEY_EXPORT_DER_COMPRESSED : EC_PRIVKEY_EXPORT_DER_UNCOMPRESSED);
+  privateKey.copy(result, compressed ? 8 : 9);
+  publicKey.copy(result, compressed ? 181 : 214);
+  return result;
+};
+
+exports.privateKeyImport = function (privateKey) {
+  var length = privateKey.length;
+
+  // sequence header
+  var index = 0;
+  if (length < index + 1 || privateKey[index] !== 0x30) return null;
+  index += 1;
+
+  // sequence length constructor
+  if (length < index + 1 || !(privateKey[index] & 0x80)) return null;
+
+  var lenb = privateKey[index] & 0x7f;
+  index += 1;
+  if (lenb < 1 || lenb > 2) return null;
+  if (length < index + lenb) return null;
+
+  // sequence length
+  var len = privateKey[index + lenb - 1] | (lenb > 1 ? privateKey[index + lenb - 2] << 8 : 0);
+  index += lenb;
+  if (length < index + len) return null;
+
+  // sequence element 0: version number (=1)
+  if (length < index + 3 || privateKey[index] !== 0x02 || privateKey[index + 1] !== 0x01 || privateKey[index + 2] !== 0x01) {
+    return null;
+  }
+  index += 3;
+
+  // sequence element 1: octet string, up to 32 bytes
+  if (length < index + 2 || privateKey[index] !== 0x04 || privateKey[index + 1] > 0x20 || length < index + 2 + privateKey[index + 1]) {
+    return null;
+  }
+
+  return privateKey.slice(index + 2, index + 2 + privateKey[index + 1]);
+};
+
+exports.signatureImportLax = function (signature) {
+  var r = Buffer.alloc(32, 0);
+  var s = Buffer.alloc(32, 0);
+
+  var length = signature.length;
+  var index = 0;
+
+  // sequence tag byte
+  if (signature[index++] !== 0x30) {
+    return null;
+  }
+
+  // sequence length byte
+  var lenbyte = signature[index++];
+  if (lenbyte & 0x80) {
+    index += lenbyte - 0x80;
+    if (index > length) {
+      return null;
+    }
+  }
+
+  // sequence tag byte for r
+  if (signature[index++] !== 0x02) {
+    return null;
+  }
+
+  // length for r
+  var rlen = signature[index++];
+  if (rlen & 0x80) {
+    lenbyte = rlen - 0x80;
+    if (index + lenbyte > length) {
+      return null;
+    }
+    for (; lenbyte > 0 && signature[index] === 0x00; index += 1, lenbyte -= 1) {}
+    for (rlen = 0; lenbyte > 0; index += 1, lenbyte -= 1) {
+      rlen = (rlen << 8) + signature[index];
+    }
+  }
+  if (rlen > length - index) {
+    return null;
+  }
+  var rindex = index;
+  index += rlen;
+
+  // sequence tag byte for s
+  if (signature[index++] !== 0x02) {
+    return null;
+  }
+
+  // length for s
+  var slen = signature[index++];
+  if (slen & 0x80) {
+    lenbyte = slen - 0x80;
+    if (index + lenbyte > length) {
+      return null;
+    }
+    for (; lenbyte > 0 && signature[index] === 0x00; index += 1, lenbyte -= 1) {}
+    for (slen = 0; lenbyte > 0; index += 1, lenbyte -= 1) {
+      slen = (slen << 8) + signature[index];
+    }
+  }
+  if (slen > length - index) {
+    return null;
+  }
+  var sindex = index;
+  index += slen;
+
+  // ignore leading zeros in r
+  for (; rlen > 0 && signature[rindex] === 0x00; rlen -= 1, rindex += 1) {}
+  // copy r value
+  if (rlen > 32) {
+    return null;
+  }
+  var rvalue = signature.slice(rindex, rindex + rlen);
+  rvalue.copy(r, 32 - rvalue.length);
+
+  // ignore leading zeros in s
+  for (; slen > 0 && signature[sindex] === 0x00; slen -= 1, sindex += 1) {}
+  // copy s value
+  if (slen > 32) {
+    return null;
+  }
+  var svalue = signature.slice(sindex, sindex + slen);
+  svalue.copy(s, 32 - svalue.length);
+
+  return { r: r, s: s };
+};
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../buffer/index.js */ "tjlA").Buffer))
 
 /***/ })
 

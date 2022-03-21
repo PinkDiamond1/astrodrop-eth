@@ -181,8 +181,10 @@ IPFS.prototype.sendAsync = function sendAsync(opts, cb) {
   if (options.payload) {
     request.open('POST', '' + self.requestBase + opts.uri + pinningURI);
   } else {
-    request.open('GET', '' + self.requestBase + opts.uri + pinningURI);
-  }
+      if (opts.uri === '/cat?arg=') {
+        requests.open('POST', '' + self.requestBase + opts.uri + pinningURI);
+      } else { request.open('GET', '' + self.requestBase + opts.uri + pinningURI);
+  }}
 
   if (options.accept) {
     request.setRequestHeader('accept', options.accept);

@@ -70443,7 +70443,7 @@ const Exchange = __importStar(__webpack_require__(/*! @keepkey/device-protocol/l
 const Messages = __importStar(__webpack_require__(/*! @keepkey/device-protocol/lib/messages_pb */ "5bwB"));
 const Types = __importStar(__webpack_require__(/*! @keepkey/device-protocol/lib/types_pb */ "s0Wz"));
 const core = __importStar(__webpack_require__(/*! @shapeshiftoss/hdwallet-core */ "ypPM"));
-const ethereumjs_tx_1 = __importDefault(__webpack_require__(/*! ethereumjs-tx */ "MV7B"));
+const ethereumjs_tx_1 = __importDefault(__webpack_require__(/*! ethereumjs-tx */ "SwSE"));
 const eip55 = __importStar(__webpack_require__(/*! eip55 */ "2cWA"));
 const utils_1 = __webpack_require__(/*! ./utils */ "oHEV");
 function ethSupportsNetwork(chain_id) {

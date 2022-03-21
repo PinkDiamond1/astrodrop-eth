@@ -6074,7 +6074,7 @@ module.exports = exports.default;
  */
 
 var _ = __webpack_require__(/*! underscore */ "F/us");
-var BN = __webpack_require__(/*! bn.js */ "0RTg");
+var BN = __webpack_require__(/*! bn.js */ "9gnv");
 var numberToBN = __webpack_require__(/*! number-to-bn */ "prZD");
 var utf8 = __webpack_require__(/*! utf8 */ "8d11");
 var Hash = __webpack_require__(/*! eth-lib/lib/hash */ "fZb/");
@@ -6730,10 +6730,10 @@ Stoplight.prototype.await = function(fn){
  */
 
 const waterfall = __webpack_require__(/*! async/waterfall */ "l1gh")
-const parallel = __webpack_require__(/*! async/parallel */ "KWkM")
+const parallel = __webpack_require__(/*! async/parallel */ "GAFv")
 const inherits = __webpack_require__(/*! util */ "MCLT").inherits
-const ethUtil = __webpack_require__(/*! ethereumjs-util */ "uXik")
-const sigUtil = __webpack_require__(/*! eth-sig-util */ "97sR")
+const ethUtil = __webpack_require__(/*! ethereumjs-util */ "/JJz")
+const sigUtil = __webpack_require__(/*! eth-sig-util */ "ZTz7")
 const extend = __webpack_require__(/*! xtend */ "U6jy")
 const Semaphore = __webpack_require__(/*! semaphore */ "odnP")
 const Subprovider = __webpack_require__(/*! ./subprovider.js */ "KZqV")
@@ -9875,7 +9875,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const waterfall_1 = __importDefault(__webpack_require__(/*! async/waterfall */ "DEdF"));
-const ethUtil = __importStar(__webpack_require__(/*! ethereumjs-util */ "uXik"));
+const ethUtil = __importStar(__webpack_require__(/*! ethereumjs-util */ "/JJz"));
 const xtend_1 = __importDefault(__webpack_require__(/*! xtend */ "U6jy"));
 const web3_provider_engine_1 = __importDefault(__webpack_require__(/*! web3-provider-engine */ "hQCr"));
 const hooked_wallet_1 = __importDefault(__webpack_require__(/*! web3-provider-engine/subproviders/hooked-wallet */ "D9IE"));
@@ -10670,7 +10670,7 @@ function isValidHex(data) {
  */
 
 var _ = __webpack_require__(/*! underscore */ "F/us");
-var BN = __webpack_require__(/*! bn.js */ "0RTg");
+var BN = __webpack_require__(/*! bn.js */ "9gnv");
 var utils = __webpack_require__(/*! ./utils.js */ "6HD3");
 
 
@@ -13169,7 +13169,7 @@ module.exports = exports['default'];
 
 const EventEmitter = __webpack_require__(/*! events */ "+qE3").EventEmitter
 const inherits = __webpack_require__(/*! util */ "MCLT").inherits
-const ethUtil = __webpack_require__(/*! ethereumjs-util */ "uXik")
+const ethUtil = __webpack_require__(/*! ethereumjs-util */ "/JJz")
 const EthBlockTracker = __webpack_require__(/*! eth-block-tracker */ "V5x4")
 const map = __webpack_require__(/*! async/map */ "LCem")
 const eachSeries = __webpack_require__(/*! async/eachSeries */ "YOJA")

@@ -303,10 +303,10 @@ module.exports =  {
  */
 
 const waterfall = __webpack_require__(/*! async/waterfall */ "l1gh")
-const parallel = __webpack_require__(/*! async/parallel */ "KWkM")
+const parallel = __webpack_require__(/*! async/parallel */ "GAFv")
 const inherits = __webpack_require__(/*! util */ "MCLT").inherits
-const ethUtil = __webpack_require__(/*! ethereumjs-util */ "uXik")
-const sigUtil = __webpack_require__(/*! eth-sig-util */ "97sR")
+const ethUtil = __webpack_require__(/*! ethereumjs-util */ "/JJz")
+const sigUtil = __webpack_require__(/*! eth-sig-util */ "ZTz7")
 const extend = __webpack_require__(/*! xtend */ "U6jy")
 const Semaphore = __webpack_require__(/*! semaphore */ "odnP")
 const Subprovider = __webpack_require__(/*! ./subprovider.js */ "Uu7K")
@@ -1230,7 +1230,7 @@ module.exports = JSON.parse("{\"rpc\":{\"invalidInput\":-32000,\"resourceNotFoun
 
 const EventEmitter = __webpack_require__(/*! events */ "+qE3").EventEmitter
 const inherits = __webpack_require__(/*! util */ "MCLT").inherits
-const ethUtil = __webpack_require__(/*! ethereumjs-util */ "uXik")
+const ethUtil = __webpack_require__(/*! ethereumjs-util */ "/JJz")
 const EthBlockTracker = __webpack_require__(/*! eth-block-tracker */ "V5x4")
 const map = __webpack_require__(/*! async/map */ "LCem")
 const eachSeries = __webpack_require__(/*! async/eachSeries */ "YOJA")

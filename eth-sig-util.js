@@ -41,8 +41,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.recoverTypedSignature_v4 = exports.recoverTypedSignature = exports.signTypedData_v4 = exports.signTypedData = exports.recoverTypedMessage = exports.signTypedMessage = exports.getEncryptionPublicKey = exports.decryptSafely = exports.decrypt = exports.encryptSafely = exports.encrypt = exports.recoverTypedSignatureLegacy = exports.signTypedDataLegacy = exports.typedSignatureHash = exports.extractPublicKey = exports.recoverPersonalSignature = exports.personalSign = exports.normalize = exports.concatSig = exports.TypedDataUtils = exports.TYPED_MESSAGE_SCHEMA = void 0;
-const ethUtil = __importStar(__webpack_require__(/*! ethereumjs-util */ "uXik"));
-const ethAbi = __importStar(__webpack_require__(/*! ethereumjs-abi */ "1shM"));
+const ethUtil = __importStar(__webpack_require__(/*! ethereumjs-util */ "/JJz"));
+const ethAbi = __importStar(__webpack_require__(/*! ethereumjs-abi */ "0gP4"));
 const nacl = __importStar(__webpack_require__(/*! tweetnacl */ "CEl9"));
 const naclUtil = __importStar(__webpack_require__(/*! tweetnacl-util */ "Qnqb"));
 const TYPED_MESSAGE_SCHEMA = {

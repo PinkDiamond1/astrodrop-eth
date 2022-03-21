@@ -1,9 +1,20 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["default~authereum~walletconnect-web3-provider"],{
 
-/***/ "0RTg":
-/*!************************************************************************!*\
-  !*** ./node_modules/@walletconnect/utils/node_modules/bn.js/lib/bn.js ***!
-  \************************************************************************/
+/***/ 13:
+/*!************************!*\
+  !*** buffer (ignored) ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/* (ignored) */
+
+/***/ }),
+
+/***/ "9gnv":
+/*!**************************************************************!*\
+  !*** ./node_modules/web3-utils/node_modules/bn.js/lib/bn.js ***!
+  \**************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3435,18 +3446,7 @@
   };
 })( false || module, this);
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../@angular-builders/custom-webpack/node_modules/webpack/buildin/module.js */ "0SIU")(module)))
-
-/***/ }),
-
-/***/ 13:
-/*!************************!*\
-  !*** buffer (ignored) ***!
-  \************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-/* (ignored) */
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../@angular-builders/custom-webpack/node_modules/webpack/buildin/module.js */ "0SIU")(module)))
 
 /***/ })
 

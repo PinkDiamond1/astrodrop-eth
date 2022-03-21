@@ -1,21 +1,21 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["default~authereum~eth-sig-util~providerEngine-771e7e5b-js~walletconnect-web3-provider"],{
 
-/***/ "1shM":
-/*!****************************************************************************************!*\
-  !*** ./node_modules/@walletconnect/web3-provider/node_modules/ethereumjs-abi/index.js ***!
-  \****************************************************************************************/
+/***/ "0gP4":
+/*!*********************************************************************!*\
+  !*** ./node_modules/authereum/node_modules/ethereumjs-abi/index.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! ./lib/index.js */ "vR07")
+module.exports = __webpack_require__(/*! ./lib/index.js */ "aNdH")
 
 
 /***/ }),
 
-/***/ "vR07":
-/*!********************************************************************************************!*\
-  !*** ./node_modules/@walletconnect/web3-provider/node_modules/ethereumjs-abi/lib/index.js ***!
-  \********************************************************************************************/
+/***/ "aNdH":
+/*!*************************************************************************!*\
+  !*** ./node_modules/authereum/node_modules/ethereumjs-abi/lib/index.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -624,7 +624,7 @@ ABI.toSerpent = function (types) {
 
 module.exports = ABI
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../buffer/index.js */ "tjlA").Buffer))
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../buffer/index.js */ "tjlA").Buffer))
 
 /***/ })
 
